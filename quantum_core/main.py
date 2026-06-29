@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 
 from quantum_core.core.config import settings
+from quantum_core.core.responses import APIResponse 
+
 
 
 # Create FastAPI application instance
@@ -13,16 +15,16 @@ app = FastAPI(
 # Root endpoint (system check)
 @app.get("/")
 def root():
-    return {
-        "name": settings.APP_NAME,
-        "status": "running",
-        "version": "1.0.0"
-    }
-
+    return APIResponse.success(
+        message="Quantum Core running",
+        data={
+            "version": "1.0.0"
+        }
+    )
 
 # Health check endpoint
 @app.get("/health")
 def health():
-    return {
-        "status": "healthy"
-    }
+    return APIResponse.success(
+        message="System healthy"
+    )
