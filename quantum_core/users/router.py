@@ -1,25 +1,76 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from quantum_core.database.session import get_db
-from quantum_core.users.schemas import UserCreate, UserResponse
+
 from quantum_core.users.service import UserService
+from quantum_core.users.schemas import (
+    UserResponse,
+    UserUpdate
+)
+
 from quantum_core.core.responses import APIResponse
 
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(
+    prefix="/users",
+    tags=["Users"]
+)
 
 
-@router.post("/register")
-def register(user: UserCreate, db: Session = Depends(get_db)):
+@router.get("/{user_id}")
+def get_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
 
-    created_user = UserService.create_user(
-        db=db,
-        email=user.email,
-        password=user.password
+    user = (
+        UserService
+        .get_by_id(
+            db,
+            user_id
+        )
     )
 
     return APIResponse.success(
-        message="User created successfully",
-        data=UserResponse.from_orm(created_user)
+        data=UserResponse.from_orm(user)
+    )
+
+
+@router.patch("/{user_id}")
+def update_user(
+    user_id: int,
+    body: UserUpdate,
+    db: Session = Depends(get_db)
+):
+
+    user = (
+        UserService
+        .update(
+            db,
+            user_id,
+            body.email
+        )
+    )
+
+    return APIResponse.success(
+        message="User updated",
+        data=UserResponse.from_orm(user)
+    )
+
+
+@router.delete("/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    UserService.delete(
+        db,
+        user_id
+    )
+
+    return APIResponse.success(
+        message="User deleted"
     )

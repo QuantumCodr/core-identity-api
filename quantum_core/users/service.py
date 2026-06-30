@@ -1,37 +1,108 @@
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 
 from quantum_core.users.models import User
 from quantum_core.core.exceptions import AppException
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 class UserService:
 
     @staticmethod
-    def hash_password(password: str) -> str:
-        return pwd_context.hash(password)
+    def get_by_email(
+        db: Session,
+        email: str
+    ):
+
+        return (
+            db.query(User)
+            .filter(User.email == email)
+            .first()
+        )
 
     @staticmethod
-    def create_user(db: Session, email: str, password: str):
+    def get_by_id(
+        db: Session,
+        user_id: int
+    ):
 
-        existing = db.query(User).filter(User.email == email).first()
+        return (
+            db.query(User)
+            .filter(User.id == user_id)
+            .first()
+        )
 
-        if existing:
-            raise AppException(
-                message="User already exists",
-                status_code=409
-            )
+    @staticmethod
+    def create(
+        db: Session,
+        email: str,
+        password_hash: str
+    ):
 
         user = User(
             email=email,
-            password_hash=UserService.hash_password(password)
+            password_hash=password_hash
         )
 
         db.add(user)
+
         db.commit()
+
         db.refresh(user)
 
         return user
+
+    @staticmethod
+    def update(
+        db: Session,
+        user_id: int,
+        email: str | None
+    ):
+
+        user = (
+            UserService
+            .get_by_id(
+                db,
+                user_id
+            )
+        )
+
+        if not user:
+
+            raise AppException(
+                message="User not found",
+                status_code=404
+            )
+
+        if email:
+
+            user.email = email
+
+        db.commit()
+
+        db.refresh(user)
+
+        return user
+
+    @staticmethod
+    def delete(
+        db: Session,
+        user_id: int
+    ):
+
+        user = (
+            UserService
+            .get_by_id(
+                db,
+                user_id
+            )
+        )
+
+        if not user:
+
+            raise AppException(
+                message="User not found",
+                status_code=404
+            )
+
+        db.delete(user)
+
+        db.commit()

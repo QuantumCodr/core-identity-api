@@ -1,7 +1,12 @@
-from fastapi import Depends, HTTPException
+# Reserved for future user-specific dependencies
+from fastapi import Depends
+from sqlalchemy.orm import Session
+
 from quantum_core.database.session import get_db
 
 
-def get_current_user():
-    # placeholder for JWT auth later
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+def get_user_service(
+    db: Session = Depends(get_db)
+):
+
+    return db
