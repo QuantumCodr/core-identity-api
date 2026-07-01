@@ -12,4 +12,4 @@ class UserResponse(BaseModel):
 
 class UserUpdate(BaseModel):
 
-    email: EmailStr | None = None
+    email: EmailStr | None = None 

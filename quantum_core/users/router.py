@@ -39,7 +39,7 @@ def get_user(
 
 
 @router.patch("/{user_id}")
-def update_user(
+def update_user( 
     user_id: int,
     body: UserUpdate,
     db: Session = Depends(get_db)
