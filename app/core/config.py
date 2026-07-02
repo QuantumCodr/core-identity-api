@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # App
-    APP_NAME: str = "Quantum Core"
+    APP_NAME: str = "BaseAPI"
     DEBUG: bool = True
 
     # Database

@@ -6,7 +6,7 @@ router = APIRouter()
 @router.get("/")
 def root():
     return APIResponse.success(
-        message="Quantum Core running",
+        message="BseAPI running",
         data={
             "version": "1.0.0"
         }

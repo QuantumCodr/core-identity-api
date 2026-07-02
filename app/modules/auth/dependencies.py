@@ -123,7 +123,7 @@ def require_verified_user(
             403
         )
 
-    return user
+    return user  
 
 
 def require_admin(
