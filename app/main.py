@@ -18,7 +18,7 @@ from quantum_core.auth.router import router as auth_router
 
 app = FastAPI(
     title=settings.APP_NAME,
-    version="1.0.0"
+    version="v0.1.0-alpha"
 )
 
 
