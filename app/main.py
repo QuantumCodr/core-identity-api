@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.exceptions import RequestValidationError
 
-from quantum_core.core.config import settings
+from app.core.config import settings
 
-from quantum_core.core.exceptions import (
+from app.core.exceptions import (
     AppException,
     app_exception_handler,
     http_exception_handler,
@@ -12,9 +12,9 @@ from quantum_core.core.exceptions import (
     generic_exception_handler
 )
 
-from quantum_core.system.router import router as system_router
-from quantum_core.users.router import router as users_router
-from quantum_core.auth.router import router as auth_router
+from app.system.router import router as system_router
+from app.modules.users.router import router as users_router
+from app.modules.auth.router import router as auth_router
 
 app = FastAPI(
     title=settings.APP_NAME,
